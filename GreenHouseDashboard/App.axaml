@@ -1,0 +1,26 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GreenHouseDashboard.App"
+             xmlns:font="GreenHouseDashboard.Assets.Font"
+             xmlns:local="using:GreenHouseDashboard"
+             RequestedThemeVariant="Default">
+  <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+  <Application.DataTemplates>
+    <local:ViewLocator/>
+  </Application.DataTemplates>
+
+  <Application.Styles>
+    <FluentTheme />
+  </Application.Styles>
+  
+  <Application.Resources>
+    <Color x:Key="Sfondo">#2ecc71</Color>
+    <Color x:Key="Link">#87CEEB</Color>
+    <Color x:Key="Bottone">#8B4513</Color>
+    <Color x:Key="Testo">#f39c12</Color>
+    <Color x:Key="TestoPiccolo">#7f8c8d</Color>
+    <FontFamily x:Key="SegoeUI">avares://GreenHouseDashboard/Assets/Font/Segoe-UI.ttf</FontFamily>
+  </Application.Resources>
+
+</Application>
