@@ -17,6 +17,7 @@ namespace GreenHouseDashboard.ViewModels
         }
 
 
+
         #region CurrentTime
         public void GetCurrent()
         {
@@ -27,6 +28,7 @@ namespace GreenHouseDashboard.ViewModels
                     TimeNowCurrent = DateTime.Now;
                     NowTime = TimeNowCurrent.ToString();
                 }));
+               
             }
         }
         #endregion

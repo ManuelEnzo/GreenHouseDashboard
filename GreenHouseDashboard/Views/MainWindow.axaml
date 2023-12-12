@@ -3,35 +3,44 @@
         xmlns:vm="using:GreenHouseDashboard.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:view="using:GreenHouseDashboard.Views.Components"
+        xmlns:viewModel="using:GreenHouseDashboard.Views.Components.ViewModel"
+        xmlns:conv="using:GreenHouseDashboard.Converter"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GreenHouseDashboard.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="GreenHouseDashboard">
 
-  <Design.DataContext>
+  <Window.DataContext>
     <vm:MainWindowViewModel/>
-  </Design.DataContext>
+  </Window.DataContext>
+  
+  <Window.Resources>
+    <!-- Assuming YourViewModel is in the same namespace as Test UserControl -->
+    <viewModel:TestViewModel x:Key="TestViewModel" />
+    <conv:BooleanNegationConverter x:Key="BooleanNegationConverter" />
+  </Window.Resources>
 
-  <DockPanel>
-    <Grid DockPanel.Dock="Left">
-      <TextBlock
-          HorizontalAlignment="Left"
-          FontFamily="{StaticResource SegoeUI}"
-          Text="Benvenuto nella Dashboard di controllo della tua serra"
-          FontSize="20"
-          FontWeight="DemiBold"
-    />
+  <SplitView IsPaneOpen="True"
+             DisplayMode="Inline"
+             OpenPaneLength="300"
+             ClipToBounds="True"
+             IsVisible="{Binding IsBusy, Converter={StaticResource BooleanNegationConverter}}">
+    <SplitView.Pane>
+      <TextBlock Text="Pane"
+                 FontSize="24"
+                 VerticalAlignment="Center"
+                 HorizontalAlignment="Center"/>
+    </SplitView.Pane>
+
+    <Grid>
+      <TextBlock Text="Content"
+                 FontSize="24"
+                 VerticalAlignment="Center"
+                 HorizontalAlignment="Center"/>
+      <view:Test DataContext="{StaticResource TestViewModel}"/>
     </Grid>
-    <Grid DockPanel.Dock="Right">
-      <TextBlock
-          HorizontalAlignment="Right"
-          FontFamily="{StaticResource SegoeUI}"
-          Text="{Binding NowTime}"
-          FontSize="20"
-          FontWeight="DemiBold"
-    />
-    </Grid>
-  </DockPanel>
+  </SplitView>
 
 </Window>
