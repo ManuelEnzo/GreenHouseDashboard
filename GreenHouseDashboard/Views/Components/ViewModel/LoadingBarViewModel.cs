@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace GreenHouseDashboard.Views.Components.ViewModel
 {
-    public class TestViewModel : ViewModelBase
+    public class LoadingBarViewModel : ViewModelBase
     {
 
         #region ----------------------------Ctor
-        public TestViewModel()
+        public LoadingBarViewModel()
         {
             LoadSpinnerValuesAsync();
         }

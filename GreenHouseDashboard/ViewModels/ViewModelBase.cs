@@ -7,7 +7,7 @@ namespace GreenHouseDashboard.ViewModels
         #region ---------------------------------- Ctor
         public ViewModelBase()
         {
-            IsBusy = true;
+            
         }
         #endregion
 

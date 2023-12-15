@@ -15,32 +15,49 @@
   <Window.DataContext>
     <vm:MainWindowViewModel/>
   </Window.DataContext>
-  
+
   <Window.Resources>
-    <!-- Assuming YourViewModel is in the same namespace as Test UserControl -->
-    <viewModel:TestViewModel x:Key="TestViewModel" />
+    <viewModel:LoadingBarViewModel x:Key="LoadingBarViewModel" />
     <conv:BooleanNegationConverter x:Key="BooleanNegationConverter" />
   </Window.Resources>
 
-  <SplitView IsPaneOpen="True"
-             DisplayMode="Inline"
-             OpenPaneLength="300"
-             ClipToBounds="True"
-             IsVisible="{Binding IsBusy, Converter={StaticResource BooleanNegationConverter}}">
-    <SplitView.Pane>
-      <TextBlock Text="Pane"
-                 FontSize="24"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Center"/>
-    </SplitView.Pane>
+  <Grid>
 
-    <Grid>
-      <TextBlock Text="Content"
-                 FontSize="24"
-                 VerticalAlignment="Center"
-                 HorizontalAlignment="Center"/>
-      <view:Test DataContext="{StaticResource TestViewModel}"/>
-    </Grid>
-  </SplitView>
+
+    <SplitView x:Name="SplitView"
+                DisplayMode="Inline"
+                IsPaneOpen="True"
+                OpenPaneLength="130"
+               ClipToBounds="True">
+      <SplitView.Pane>
+        <!-- Menù -->
+        <ItemsControl ItemsSource="{Binding MenuItems}" 
+                      Width="55" 
+                      HorizontalAlignment="Center"
+                      Margin="0, 20, 0, 0">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <Button>
+                <DockPanel>
+                  <Image Source="{Binding IconSource}" />
+                </DockPanel>
+                <Button.Command>
+                  <Binding Path="Command"/>
+                </Button.Command>
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </SplitView.Pane>
+      <Grid>
+        <ContentControl Content="{Binding SelectedMenuContent}"/>
+      </Grid>
+    </SplitView>
+    
+    <TextBlock Text="{Binding NowTime}"
+               VerticalAlignment="Bottom"
+               HorizontalAlignment="Left"/>
+  
+  </Grid>
 
 </Window>

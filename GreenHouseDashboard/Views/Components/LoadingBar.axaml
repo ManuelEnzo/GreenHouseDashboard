@@ -4,15 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:view="using:GreenHouseDashboard.Views.Components.ViewModel"
              xmlns:conv="using:GreenHouseDashboard.Converter"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="GreenHouseDashboard.Views.Components.Test"
-             x:DataType="view:TestViewModel">
+             mc:Ignorable="d"
+             x:Class="GreenHouseDashboard.Views.Components.LoadingBar"
+             x:DataType="view:LoadingBarViewModel">
 
   <UserControl.Resources>
     <conv:BooleanNegationConverter x:Key="BooleanNegationConverter"/>
   </UserControl.Resources>
   <StackPanel Margin="20" VerticalAlignment="Center">
-    <ProgressBar  Margin="0 10" Height="20"
+    <ProgressBar  Margin="0 10" Height="20" Width="50"
                   Minimum="0" Maximum="100" 
                   Value="{Binding MySpinnerValue}"
                   ShowProgressText="True" 
