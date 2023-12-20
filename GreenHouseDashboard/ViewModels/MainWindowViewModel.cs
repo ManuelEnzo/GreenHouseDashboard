@@ -19,9 +19,7 @@ namespace GreenHouseDashboard.ViewModels
             timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             StartTimerDispatcher(ref timer);
 
-
             MenuItems.Add(AddItemsIntoMenu("Dashboard", new Settings(), "greenhouse34.png"));
-
 
         }
 
@@ -49,7 +47,7 @@ namespace GreenHouseDashboard.ViewModels
 
         #endregion
 
-
+        #region --------------------- ManageVM
         private void ShowMenuContent(Control content)
         {
             SelectedMenuContent = content;
@@ -61,7 +59,7 @@ namespace GreenHouseDashboard.ViewModels
             timer.Start();
         }
 
-
+        #endregion
 
         #region --------------------- Gestione Menù
         /// <summary>

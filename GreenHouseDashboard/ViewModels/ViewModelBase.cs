@@ -12,15 +12,15 @@ namespace GreenHouseDashboard.ViewModels
         #endregion
 
         #region ---------------------------------- Property
-        private bool isBusy;
+        private bool _isBusy;
 
         public bool IsBusy
         {
-            get { return isBusy; }
+            get { return _isBusy; }
             set
             {
-                isBusy = value;
-                this.RaisePropertyChanged(nameof(IsBusy));
+                _isBusy = value;
+                this.RaiseAndSetIfChanged(ref _isBusy, value);
             }
         }
 

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenHouseDashboard", "GreenHouseDashboard\GreenHouseDashboard.csproj", "{2121F1F7-E932-4DF5-A27A-3BDD5FA95F3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenHouseDashboard.DatabaseInteraction", "GreenHouseDashboard.DatabaseInteraction\GreenHouseDashboard.DatabaseInteraction.csproj", "{4D0E8579-BEEC-45BC-9E7C-75EBB8ED9ADD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenHouseDashboard.DTO", "GreenHouseDashboard.DTO\GreenHouseDashboard.DTO.csproj", "{94259808-6B34-4D6B-9790-7F8D81B46E56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{2121F1F7-E932-4DF5-A27A-3BDD5FA95F3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2121F1F7-E932-4DF5-A27A-3BDD5FA95F3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2121F1F7-E932-4DF5-A27A-3BDD5FA95F3C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4D0E8579-BEEC-45BC-9E7C-75EBB8ED9ADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D0E8579-BEEC-45BC-9E7C-75EBB8ED9ADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D0E8579-BEEC-45BC-9E7C-75EBB8ED9ADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D0E8579-BEEC-45BC-9E7C-75EBB8ED9ADD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94259808-6B34-4D6B-9790-7F8D81B46E56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94259808-6B34-4D6B-9790-7F8D81B46E56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94259808-6B34-4D6B-9790-7F8D81B46E56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94259808-6B34-4D6B-9790-7F8D81B46E56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

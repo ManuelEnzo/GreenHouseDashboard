@@ -30,9 +30,10 @@
                 OpenPaneLength="130"
                ClipToBounds="True">
       <SplitView.Pane>
+
         <!-- Menù -->
-        <ItemsControl ItemsSource="{Binding MenuItems}" 
-                      Width="55" 
+        <ItemsControl ItemsSource="{Binding MenuItems}"
+                      Width="55"
                       HorizontalAlignment="Center"
                       Margin="0, 20, 0, 0">
           <ItemsControl.ItemTemplate>
@@ -48,16 +49,21 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
+
       </SplitView.Pane>
       <Grid>
         <ContentControl Content="{Binding SelectedMenuContent}"/>
       </Grid>
     </SplitView>
-    
-    <TextBlock Text="{Binding NowTime}"
-               VerticalAlignment="Bottom"
-               HorizontalAlignment="Left"/>
-  
+
+    <Grid ColumnDefinitions="*, 4*, *" >
+
+      <TextBlock Text="{Binding NowTime}"
+              VerticalAlignment="Bottom"
+              HorizontalAlignment="Left" Grid.Column="0"/>
+
+    </Grid>
+   
   </Grid>
 
 </Window>
