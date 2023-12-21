@@ -1,13 +1,25 @@
-﻿using GreenHouseDashboard.Models;
+﻿using Avalonia;
+using Avalonia.Input;
+using Avalonia.Threading;
+using Avalonia.Win32.Interop.Automation;
+using GreenHouseDashboard.DTO;
+using GreenHouseDashboard.DTO.Login;
+using GreenHouseDashboard.Models;
+using GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces;
+using GreenHouseDashboard.Views;
 using Newtonsoft.Json;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -17,14 +29,14 @@ namespace GreenHouseDashboard.ViewModels
     public class LoginViewModel : ViewModelBase
     {
 
+
         public LoginViewModel()
         {
-            LoginCommand = new RelayCommand(async () => await ExecuteLoginAsync(), CanExecuteLogin);
+            LoginCommand = new RelayCommand(async () => await ExecuteLoginAsync(this.Username, this.Password), CanExecuteLogin);
             this.Username = string.Empty;
             this.Password = string.Empty;
             ReadAllJsonInformationLogin(ref _username, ref _password);
         }
-
 
 
         #region -------------------- Property Login
@@ -75,20 +87,43 @@ namespace GreenHouseDashboard.ViewModels
 
         public bool CanExecuteLogin()
         {
-            return !String.IsNullOrEmpty(Password.Trim()) && !String.IsNullOrEmpty(Username.Trim());
+            return !System.String.IsNullOrEmpty(Password.Trim()) && !System.String.IsNullOrEmpty(Username.Trim());
         }
 
-        public async Task ExecuteLoginAsync()
+        public async Task ExecuteLoginAsync(string username, string passwr)
         {
             try
             {
+                IsBusy = true;
+
+                var url = $"{IpService}/Utente/AuthenticateUser";
+                var dati = new
+                {
+                    nomeUtente = username,
+                    password = passwr
+                };
+
+                IRequestHttpService requestHttp = new HttpRequestService();
+                var response = await requestHttp.SendRequestAsync<LoginResponse>(url, HttpMethod.Post, dati);
+
+                if(response != null)
+                {
+                    Debug.WriteLine($"Utente Loggato con successo : ------ {response} ------- ");
+
+                }
+
+                await Task.Delay(2000);
+
+
+                var w1 = new MainWindow();
+                w1.Show();
 
             }
-            catch (Exception)
+            catch (System.Exception ex)
             {
-
-                throw;
+                throw new System.Exception($"Errore durante l'autenticazione: {ex.Message}");
             }
+
         }
 
         #endregion
@@ -119,17 +154,17 @@ namespace GreenHouseDashboard.ViewModels
                 {
                     if (loginInfo.Check == "1")
                     {
-                        Username = loginInfo.Username.Trim();
-                        Password = loginInfo.Password.Trim();
+                        username = loginInfo.Username.Trim();
+                        password = loginInfo.Password.Trim();
                     }
-                    
+
                 }
 
             }
-            catch (Exception)
+            catch (System.Exception)
             {
 
-                throw new Exception("Errore in fase di deserializzazione Json Login");
+                throw new System.Exception("Errore in fase di deserializzazione Json Login");
             }
 
         }
@@ -140,5 +175,7 @@ namespace GreenHouseDashboard.ViewModels
             public string Username { get; set; }
             public string Password { get; set; }
         }
+
+    
     }
 }

@@ -35,11 +35,13 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
+    <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GreenHouseDashboard.DTO\GreenHouseDashboard.DTO.csproj" />
+    <ProjectReference Include="..\GreenHouseDashboard.ServicesInterfaces\GreenHouseDashboard.ServicesInterfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>

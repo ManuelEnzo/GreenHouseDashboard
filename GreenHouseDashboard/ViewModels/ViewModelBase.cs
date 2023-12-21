@@ -19,11 +19,13 @@ namespace GreenHouseDashboard.ViewModels
             get { return _isBusy; }
             set
             {
-                _isBusy = value;
                 this.RaiseAndSetIfChanged(ref _isBusy, value);
             }
         }
 
+
         #endregion
+
+        public static string IpService { get; set; } = "http://greenhouseme.ddns.net:5000";
     }
 }

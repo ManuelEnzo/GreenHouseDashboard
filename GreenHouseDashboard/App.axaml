@@ -12,14 +12,16 @@
 
   <Application.Styles>
     <FluentTheme />
+    <StyleInclude Source="avares://AvaloniaProgressRing/Styles/ProgressRing.xaml"/>
   </Application.Styles>
   
   <Application.Resources>
     <Color x:Key="Sfondo">#2ecc71</Color>
     <Color x:Key="Link">#87CEEB</Color>
-    <Color x:Key="Bottone">#8B4513</Color>
+    <Color x:Key="Bottone">#E0FEB0</Color>
     <Color x:Key="Testo">#f39c12</Color>
     <Color x:Key="TestoPiccolo">#7f8c8d</Color>
+    <Color x:Key="Bordo">#C4FEB0</Color>
     <FontFamily x:Key="SegoeUI">avares://GreenHouseDashboard/Assets/Font/Segoe-UI.ttf</FontFamily>
   </Application.Resources>
 

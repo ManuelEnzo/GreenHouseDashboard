@@ -17,14 +17,13 @@ namespace GreenHouseDashboard
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                //desktop.MainWindow = new MainWindow
-                //{
-                //    DataContext = new MainWindowViewModel(),
-                //};
                 desktop.MainWindow = new LoginView
                 {
                     DataContext = new LoginViewModel(),
                 };
+                desktop.MainWindow.Width = 400;
+                desktop.MainWindow.Height = 500;
+               
             }
 
             base.OnFrameworkInitializationCompleted();
