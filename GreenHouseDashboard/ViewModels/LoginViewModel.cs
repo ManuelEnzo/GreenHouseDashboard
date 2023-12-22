@@ -1,4 +1,6 @@
 ﻿using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Threading;
 using Avalonia.Win32.Interop.Automation;
@@ -7,6 +9,7 @@ using GreenHouseDashboard.DTO.Login;
 using GreenHouseDashboard.Models;
 using GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces;
 using GreenHouseDashboard.Views;
+using GreenHouseDashboard.Views.Components;
 using Newtonsoft.Json;
 using ReactiveUI;
 using System;
@@ -17,8 +20,10 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Tmds.DBus.Protocol;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GreenHouseDashboard.ViewModels
@@ -29,6 +34,7 @@ namespace GreenHouseDashboard.ViewModels
     public class LoginViewModel : ViewModelBase
     {
 
+        public event EventHandler LoginCompleted;
 
         public LoginViewModel()
         {
@@ -70,6 +76,7 @@ namespace GreenHouseDashboard.ViewModels
         #region -------------------- Command Login
 
         private RelayCommand _loginCommand;
+        private Window login;
 
         public RelayCommand LoginCommand
         {
@@ -106,23 +113,20 @@ namespace GreenHouseDashboard.ViewModels
                 IRequestHttpService requestHttp = new HttpRequestService();
                 var response = await requestHttp.SendRequestAsync<LoginResponse>(url, HttpMethod.Post, dati);
 
-                if(response != null)
+                if (response != null)
                 {
                     Debug.WriteLine($"Utente Loggato con successo : ------ {response} ------- ");
-
+                    await Task.Delay(2000);
+                    LoginCompleted?.Invoke(this, EventArgs.Empty);
                 }
 
-                await Task.Delay(2000);
-
-
-                var w1 = new MainWindow();
-                w1.Show();
 
             }
             catch (System.Exception ex)
             {
                 throw new System.Exception($"Errore durante l'autenticazione: {ex.Message}");
             }
+            finally { IsBusy = false; }
 
         }
 
@@ -176,6 +180,12 @@ namespace GreenHouseDashboard.ViewModels
             public string Password { get; set; }
         }
 
-    
+        private CancellationTokenSource _cts = new CancellationTokenSource();  
+        public CancellationToken cancellationToken => _cts.Token;
+        public void Cancel()
+        {
+            _cts.Cancel();
+        }
+
     }
 }

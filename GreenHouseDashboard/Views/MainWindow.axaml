@@ -56,13 +56,13 @@
       </Grid>
     </SplitView>
 
-    <Grid ColumnDefinitions="*, 4*, *" >
+    <!--<Grid ColumnDefinitions="*, 4*, *" >
 
       <TextBlock Text="{Binding NowTime}"
               VerticalAlignment="Bottom"
               HorizontalAlignment="Left" Grid.Column="0"/>
 
-    </Grid>
+    </Grid>-->
    
   </Grid>
 
