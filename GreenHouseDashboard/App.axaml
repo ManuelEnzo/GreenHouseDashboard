@@ -16,7 +16,7 @@
   </Application.Styles>
   
   <Application.Resources>
-    <Color x:Key="Sfondo">#2ecc71</Color>
+    <Color x:Key="Sfondo">#B6CE8A</Color>
     <Color x:Key="Link">#87CEEB</Color>
     <Color x:Key="Bottone">#E0FEB0</Color>
     <Color x:Key="Testo">#f39c12</Color>

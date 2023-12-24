@@ -1,25 +1,75 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="using:GreenHouseDashboard.ViewModels"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:DataType="vm:SettingsViewModel"
              x:Class="GreenHouseDashboard.Views.Settings">
 
-  <Grid ColumnDefinitions="*, *, *" RowDefinitions="*, *, *">
+  <Grid ColumnDefinitions="*" RowDefinitions="*, *, *">
 
-    <!-- Titolo Pagina-->
-    <TextBlock
-      Grid.Row="0" Grid.Column="0"
-      FontFamily="{StaticResource SegoeUI}"
-      FontSize="20"
-      FontWeight="Medium"
-      Margin="10"
-      TextAlignment="Center"
-      Text="Gestione Variabili Ambiente">
-    </TextBlock>
+    <StackPanel Grid.Column="0" Grid.Row="0" Margin="10, 0, 0, 0">
+      <!-- Titolo Pagina-->
+      <TextBlock
+        FontFamily="{StaticResource SegoeUI}"
+        FontSize="24"
+        Foreground="{StaticResource Testo}"
+        FontWeight="Medium"
+        TextAlignment="Left"
+        Text="Settings">
+      </TextBlock>
+    </StackPanel>
+
+    <!-- Testo -->
+    <Border 
+        Grid.Column="1" 
+        Grid.Row="1" 
+        BorderBrush="{StaticResource Testo}" 
+        BorderThickness="1" CornerRadius="10">
+      <StackPanel>
+        <TextBlock
+          FontFamily="{StaticResource SegoeUI}"
+          TextAlignment="Center"
+          FontSize="23"
+          Foreground="{StaticResource Testo}"
+          FontStyle="Normal"
+          FontWeight="Medium">
+          Centro di comando
+        </TextBlock>
+        <TextBlock
+          FontFamily="{StaticResource SegoeUI}"
+          FontSize="14"
+          TextAlignment="Center"
+          Foreground="{StaticResource TestoPiccolo}"
+          FontWeight="Medium"
+          Text="{Binding TestoCentrale}">
+        </TextBlock>
+        <Separator />
+      </StackPanel>
+    </Border>
+
+
+
+    <StackPanel Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center">
+      <CheckBox >Desideri salvare le info di login ?</CheckBox>
+      <Grid ColumnDefinitions="*, *">
+        <Label Grid.Column="0">Imposta il livello di log</Label>
+        <ComboBox
+              ItemsSource="{Binding LivelloLogItems}"
+              Grid.Column="1"
+              x:Name="fontComboBox"
+              SelectedIndex="0"
+              MaxDropDownHeight="300">
+          <ComboBox.ItemTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </Grid>
+    </StackPanel>
+
 
     <!-- -->
-    
-    
+
+
   </Grid>
 </UserControl>

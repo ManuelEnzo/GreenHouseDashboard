@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces
 {
     public interface IRequestHttpService
     {
-        Task<T> SendRequestAsync<T>(string url, HttpMethod method, object data = null);
+        Task<T> SendRequestAsync<T>(string url, HttpMethod method, object data = null, string authToken = null);
     }
 
     public class HttpRequestService : IRequestHttpService
@@ -21,7 +22,7 @@ namespace GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces
             this.httpClient = new HttpClient();
         }
 
-        public async Task<T> SendRequestAsync<T>(string url, HttpMethod method, object data = null)
+        public async Task<T> SendRequestAsync<T>(string url, HttpMethod method, object data = null, string authToken = null)
         {
             try
             {
@@ -29,12 +30,29 @@ namespace GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces
 
                 if (method == HttpMethod.Get)
                 {
-                    response = await httpClient.GetAsync(url);
+                    var request = new HttpRequestMessage(HttpMethod.Get, url);
+                    if (!string.IsNullOrEmpty(authToken))
+                    {
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+                    }
+
+                    response = await httpClient.SendAsync(request);
                 }
                 else if (method == HttpMethod.Post)
                 {
-                    var jc = data != null ? new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json") : null;
-                    response = await httpClient.PostAsync(url, jc);
+                    var request = new HttpRequestMessage(HttpMethod.Post, url);
+                    if (!string.IsNullOrEmpty(authToken))
+                    {
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+                    }
+
+                    if (data != null)
+                    {
+                        var jsonContents = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
+                        request.Content = jsonContents;
+                    }
+
+                    response = await httpClient.SendAsync(request);
                 }
                 else
                 {
@@ -43,7 +61,7 @@ namespace GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    return default; // o gestisci l'errore in un altro modo a seconda delle tue esigenze
+                    return default;
                 }
 
                 string jsonContent = await response.Content.ReadAsStringAsync();
@@ -51,11 +69,12 @@ namespace GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces
             }
             catch (HttpRequestException ex)
             {
-                // Gestisci errori di rete, timeout, ecc.
                 Console.WriteLine($"Errore nella richiesta HTTP: {ex.Message}");
-                return default; // o gestisci l'errore in un altro modo a seconda delle tue esigenze
+                return default;
             }
         }
+
+
 
     }
 }

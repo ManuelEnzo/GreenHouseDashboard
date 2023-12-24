@@ -5,6 +5,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <UseWPF>False</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,6 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.0.6" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.6" />
     <PackageReference Include="Avalonia.Desktop" Version="11.0.6" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.0.6" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.6" />
@@ -36,6 +38,8 @@
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.6" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.0.6" />
     <PackageReference Include="Deadpikle.AvaloniaProgressRing" Version="0.10.3" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc2" />
+    <PackageReference Include="MessageBox.Avalonia" Version="3.1.5.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 

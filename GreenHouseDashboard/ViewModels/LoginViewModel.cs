@@ -1,30 +1,20 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Input;
-using Avalonia.Threading;
-using Avalonia.Win32.Interop.Automation;
-using GreenHouseDashboard.DTO;
+﻿using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using GreenHouseDashboard.DTO.Login;
 using GreenHouseDashboard.Models;
 using GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces;
-using GreenHouseDashboard.Views;
-using GreenHouseDashboard.Views.Components;
+using Microsoft.VisualBasic;
+using MsBox.Avalonia.Dto;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia;
 using Newtonsoft.Json;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Tmds.DBus.Protocol;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -119,7 +109,17 @@ namespace GreenHouseDashboard.ViewModels
                     await Task.Delay(2000);
                     LoginCompleted?.Invoke(this, EventArgs.Empty);
                 }
-
+                else
+                {
+                    Debug.WriteLine($"Utente non loggato : ------ {response} ------- ");
+                    await MessageBoxManager.GetMessageBoxStandard(new MessageBoxStandardParams
+                                                {
+                                                    ContentTitle = "Attenzione !",
+                                                    ContentMessage = "Password/Username non corretta. Ritenta per accedere !",
+                                                    Icon = Icon.Warning,
+                                                    ButtonDefinitions = ButtonEnum.Ok
+                                                }).ShowWindowAsync();
+                }
 
             }
             catch (System.Exception ex)
@@ -180,7 +180,7 @@ namespace GreenHouseDashboard.ViewModels
             public string Password { get; set; }
         }
 
-        private CancellationTokenSource _cts = new CancellationTokenSource();  
+        private CancellationTokenSource _cts = new CancellationTokenSource();
         public CancellationToken cancellationToken => _cts.Token;
         public void Cancel()
         {

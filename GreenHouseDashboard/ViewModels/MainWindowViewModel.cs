@@ -7,73 +7,116 @@ using Avalonia.Controls;
 using System;
 using System.Collections.ObjectModel;
 using ImageHelper = GreenHouseDashboard.Models.ImageHelper;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using System.Threading.Tasks;
+using MsBox.Avalonia.Dto;
+using MsBox.Avalonia.Enums;
+using MsBox.Avalonia;
+using System.Reactive;
+using GreenHouseDashboard.DTO.Misurazioni;
+using GreenHouseDashboard.DTO.Login;
+using GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces;
+using System.Diagnostics;
+using System.Net.Http;
 
 namespace GreenHouseDashboard.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private readonly DispatcherTimer timer;
 
+        /// <summary>
+        /// All'Load call API asincrone
+        /// </summary>
         public MainWindowViewModel()
         {
-            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
-            StartTimerDispatcher(ref timer);
-
-            MenuItems.Add(AddItemsIntoMenu("Dashboard", new Settings(), "greenhouse34.png"));
-
+            _ = Task.Run(async () =>
+            {
+                await OnVMLoadAsync();
+            });
         }
+
+
+
 
         #region --------------------- Property
+        private ObservableCollection<double> _listItemTemperatura;
 
-        private string nowTime;
-
-        public string NowTime
+        public ObservableCollection<double> ListItemTemperatura
         {
-            get { return nowTime; }
-            set { this.RaiseAndSetIfChanged(ref nowTime, value); }
+            get { return _listItemTemperatura; }
+            set { this.RaiseAndSetIfChanged(ref _listItemTemperatura, value); }
         }
 
-        public string Greeting => "Benvenuto nella GreenHouseDashboard";
-
-        public ObservableCollection<MenuItemViewModel> MenuItems { get; } = new ObservableCollection<MenuItemViewModel>();
-
-        private Control _selectedMenuContent;
-
-        public Control SelectedMenuContent
-        {
-            get { return _selectedMenuContent; }
-            set => this.RaiseAndSetIfChanged(ref _selectedMenuContent, value);
-        }
 
         #endregion
 
         #region --------------------- ManageVM
-        private void ShowMenuContent(Control content)
+        public async Task OnVMLoadAsync()
         {
-            SelectedMenuContent = content;
+            try
+            {
+
+                //Centralizzo il metodo inserendo uno switch case sui sensori
+
+                ListItemTemperatura = InitializedObservabile();
+
+
+
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("Errore in fase di caricamento Dati Sensori");
+            }
         }
 
-        private void StartTimerDispatcher(ref DispatcherTimer timer)
+        private ObservableCollection<double> InitializedObservabile()
         {
-            timer.Tick += (sender, args) => NowTime = DateTime.Now.ToString("T");
-            timer.Start();
+            return new ObservableCollection<double>();
         }
 
+        //private async Task<MisurazioniResponse> CallAPISensorAsync(int sensoreId)
+        //{
+        //    try
+        //    {
+        //        IsBusy = true;
+
+        //        var url = $"{IpService}/Misurazioni/GetMisurazioniBySensore/1?idSensore={sensoreId}";
+
+
+        //        IRequestHttpService requestHttp = new HttpRequestService();
+        //        var response = await requestHttp.SendRequestAsync<MisurazioniResponse>(url, HttpMethod.Get);
+
+        //        if (response != null)
+        //        {
+        //            Debug.WriteLine($"Utente Loggato con successo : ------ {response} ------- ");
+        //            await Task.Delay(2000);
+        //        }
+        //        else
+        //        {
+        //            Debug.WriteLine($"Utente non loggato : ------ {response} ------- ");
+        //            await MessageBoxManager.GetMessageBoxStandard(new MessageBoxStandardParams
+        //            {
+        //                ContentTitle = "Attenzione !",
+        //                ContentMessage = "Password/Username non corretta. Ritenta per accedere !",
+        //                Icon = Icon.Warning,
+        //                ButtonDefinitions = ButtonEnum.Ok
+        //            }).ShowWindowAsync();
+        //        }
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
         #endregion
 
-        #region --------------------- Gestione Menù
-        /// <summary>
-        /// Centralizzato Add Item nel menù della dashboard
-        /// </summary>
-        /// <param name="name">Nome della voce aggiunta</param>
-        /// <param name="control"><see cref="Control"/></param>
-        /// <param name="iconResources">Path Icona</param>
-        /// <returns></returns>
-        private MenuItemViewModel AddItemsIntoMenu(string name, Control control, string iconResources)
-        {
-            return new MenuItemViewModel(name, new RelayCommand(() => ShowMenuContent(control)), ImageHelper.LoadFromResource(new(string.Concat("avares://GreenHouseDashboard/Assets/",iconResources))));
-        }
-        #endregion
+
+
+
 
 
     }

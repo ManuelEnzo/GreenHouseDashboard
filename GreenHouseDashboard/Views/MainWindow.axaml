@@ -6,64 +6,39 @@
         xmlns:view="using:GreenHouseDashboard.Views.Components"
         xmlns:viewModel="using:GreenHouseDashboard.Views.Components.ViewModel"
         xmlns:conv="using:GreenHouseDashboard.Converter"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GreenHouseDashboard.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="GreenHouseDashboard">
+        Title="GreenHouseDashboard"
+        xmlns:intr="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity">
 
   <Window.DataContext>
     <vm:MainWindowViewModel/>
   </Window.DataContext>
+  
 
+  
   <Window.Resources>
-    <viewModel:LoadingBarViewModel x:Key="LoadingBarViewModel" />
     <conv:BooleanNegationConverter x:Key="BooleanNegationConverter" />
   </Window.Resources>
 
-  <Grid>
+  <Grid ColumnDefinitions="*,*,*" RowDefinitions="2*,2*,*">
 
+    <Panel Grid.Column="0" Grid.Row="0" Background="AliceBlue">
+      <TextBlock> Temp C°</TextBlock>
+    </Panel>
 
-    <SplitView x:Name="SplitView"
-                DisplayMode="Inline"
-                IsPaneOpen="True"
-                OpenPaneLength="130"
-               ClipToBounds="True">
-      <SplitView.Pane>
-
-        <!-- Menù -->
-        <ItemsControl ItemsSource="{Binding MenuItems}"
-                      Width="55"
-                      HorizontalAlignment="Center"
-                      Margin="0, 20, 0, 0">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <Button>
-                <DockPanel>
-                  <Image Source="{Binding IconSource}" />
-                </DockPanel>
-                <Button.Command>
-                  <Binding Path="Command"/>
-                </Button.Command>
-              </Button>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
-
-      </SplitView.Pane>
-      <Grid>
-        <ContentControl Content="{Binding SelectedMenuContent}"/>
-      </Grid>
-    </SplitView>
-
-    <!--<Grid ColumnDefinitions="*, 4*, *" >
-
-      <TextBlock Text="{Binding NowTime}"
-              VerticalAlignment="Bottom"
-              HorizontalAlignment="Left" Grid.Column="0"/>
-
-    </Grid>-->
-   
+    <Panel Grid.Column="1" Grid.Row="0" Background="AntiqueWhite">
+      <TextBlock></TextBlock>
+    </Panel>
+    
+    <Panel Grid.Column="2" Grid.Row="0" Background="Aquamarine">
+      <TextBlock></TextBlock>
+    </Panel>
+    
+    
   </Grid>
 
 </Window>
