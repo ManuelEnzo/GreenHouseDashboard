@@ -9,5 +9,6 @@ namespace GreenHouseDashboard.Views
         {
             InitializeComponent();
         }
+
     }
 }

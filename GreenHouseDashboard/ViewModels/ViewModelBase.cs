@@ -1,4 +1,6 @@
-﻿using ReactiveUI;
+﻿using Avalonia.Interactivity;
+using ReactiveUI;
+using System;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -22,10 +24,9 @@ namespace GreenHouseDashboard.ViewModels
                 this.RaiseAndSetIfChanged(ref _isBusy, value);
             }
         }
-
-
+        public static string IpService { get; set; } = "http://greenhouseme.ddns.net:5000";
+        public static string JwtToken { get; set; }
         #endregion
 
-        public static string IpService { get; set; } = "http://greenhouseme.ddns.net:5000";
     }
 }

@@ -15,6 +15,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -107,18 +108,23 @@ namespace GreenHouseDashboard.ViewModels
                 {
                     Debug.WriteLine($"Utente Loggato con successo : ------ {response} ------- ");
                     await Task.Delay(2000);
+                    if (!String.IsNullOrEmpty(response.Token))
+                    {
+                        JwtToken = response.Token;
+                    }
+
                     LoginCompleted?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
                     Debug.WriteLine($"Utente non loggato : ------ {response} ------- ");
                     await MessageBoxManager.GetMessageBoxStandard(new MessageBoxStandardParams
-                                                {
-                                                    ContentTitle = "Attenzione !",
-                                                    ContentMessage = "Password/Username non corretta. Ritenta per accedere !",
-                                                    Icon = Icon.Warning,
-                                                    ButtonDefinitions = ButtonEnum.Ok
-                                                }).ShowWindowAsync();
+                    {
+                        ContentTitle = "Attenzione !",
+                        ContentMessage = "Password/Username non corretta. Ritenta per accedere !",
+                        Icon = Icon.Warning,
+                        ButtonDefinitions = ButtonEnum.Ok
+                    }).ShowWindowAsync();
                 }
 
             }

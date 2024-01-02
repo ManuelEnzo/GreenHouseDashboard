@@ -19,10 +19,11 @@ using GreenHouseDashboard.DTO.Login;
 using GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces;
 using System.Diagnostics;
 using System.Net.Http;
+using GreenHouseDashboard.Interfaces;
 
 namespace GreenHouseDashboard.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase, IAsyncInitialization
     {
 
         /// <summary>
@@ -30,13 +31,12 @@ namespace GreenHouseDashboard.ViewModels
         /// </summary>
         public MainWindowViewModel()
         {
-            _ = Task.Run(async () =>
-            {
-                await OnVMLoadAsync();
-            });
+            IsBusy = true;
+            Initialization =  OnVMLoadAsync();
+            IsBusy = false;
         }
 
-
+        public Task Initialization { get; private set; }
 
 
         #region --------------------- Property
@@ -58,8 +58,10 @@ namespace GreenHouseDashboard.ViewModels
             {
 
                 //Centralizzo il metodo inserendo uno switch case sui sensori
+                ListItemTemperatura = new ObservableCollection<double>();
+                var x = await CallAPISensorAsync();
 
-                ListItemTemperatura = InitializedObservabile();
+
 
 
 
@@ -71,47 +73,33 @@ namespace GreenHouseDashboard.ViewModels
             }
         }
 
-        private ObservableCollection<double> InitializedObservabile()
+        private async Task<MisurazioniResponse> CallAPISensorAsync()
         {
-            return new ObservableCollection<double>();
+            try
+            {
+                
+
+                var url = $"{IpService}/Misurazioni/GetMisurazioni";
+
+
+                IRequestHttpService requestHttp = new HttpRequestService();
+                var response = await requestHttp.SendRequestAsync<ObservableCollection<MisurazioniResponse>>(url, HttpMethod.Get, authToken: JwtToken);
+
+                if (response != null)
+                {
+                    await Task.Delay(2000);
+                }
+                else
+                {
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
-
-        //private async Task<MisurazioniResponse> CallAPISensorAsync(int sensoreId)
-        //{
-        //    try
-        //    {
-        //        IsBusy = true;
-
-        //        var url = $"{IpService}/Misurazioni/GetMisurazioniBySensore/1?idSensore={sensoreId}";
-
-
-        //        IRequestHttpService requestHttp = new HttpRequestService();
-        //        var response = await requestHttp.SendRequestAsync<MisurazioniResponse>(url, HttpMethod.Get);
-
-        //        if (response != null)
-        //        {
-        //            Debug.WriteLine($"Utente Loggato con successo : ------ {response} ------- ");
-        //            await Task.Delay(2000);
-        //        }
-        //        else
-        //        {
-        //            Debug.WriteLine($"Utente non loggato : ------ {response} ------- ");
-        //            await MessageBoxManager.GetMessageBoxStandard(new MessageBoxStandardParams
-        //            {
-        //                ContentTitle = "Attenzione !",
-        //                ContentMessage = "Password/Username non corretta. Ritenta per accedere !",
-        //                Icon = Icon.Warning,
-        //                ButtonDefinitions = ButtonEnum.Ok
-        //            }).ShowWindowAsync();
-        //        }
-
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
         #endregion
 
 
