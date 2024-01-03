@@ -20,6 +20,9 @@ using GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces;
 using System.Diagnostics;
 using System.Net.Http;
 using GreenHouseDashboard.Interfaces;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Reactive.Concurrency;
+using System.Threading;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -31,9 +34,13 @@ namespace GreenHouseDashboard.ViewModels
         /// </summary>
         public MainWindowViewModel()
         {
-            IsBusy = true;
-            Initialization =  OnVMLoadAsync();
-            IsBusy = false;
+          
+            new Action(async () =>
+            {
+                IsBusy = true;
+                var Data = await OnVMLoadAsync();
+                IsBusy = false;
+            }).Invoke();
         }
 
         public Task Initialization { get; private set; }
@@ -52,28 +59,20 @@ namespace GreenHouseDashboard.ViewModels
         #endregion
 
         #region --------------------- ManageVM
-        public async Task OnVMLoadAsync()
+        public async Task<ObservableCollection<MisurazioniResponse>> OnVMLoadAsync()
         {
             try
             {
-
-                //Centralizzo il metodo inserendo uno switch case sui sensori
-                ListItemTemperatura = new ObservableCollection<double>();
-                var x = await CallAPISensorAsync();
-
-
-
-
-
+                return await CallAPISensorAsync();
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw new Exception("Errore in fase di caricamento Dati Sensori");
+                throw new Exception("Errore in fase di caricamento Dati Sensori", e.GetBaseException());
             }
         }
 
-        private async Task<MisurazioniResponse> CallAPISensorAsync()
+        private async Task<ObservableCollection<MisurazioniResponse>> CallAPISensorAsync()
         {
             try
             {
@@ -92,7 +91,7 @@ namespace GreenHouseDashboard.ViewModels
                 else
                 {
                 }
-                return null;
+                return response;
             }
             catch (Exception)
             {
