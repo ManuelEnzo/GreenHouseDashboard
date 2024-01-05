@@ -23,88 +23,74 @@ using GreenHouseDashboard.Interfaces;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Reactive.Concurrency;
 using System.Threading;
+using DynamicData;
+using System.Windows.Input;
 
 namespace GreenHouseDashboard.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase, IAsyncInitialization
+    public class MainWindowViewModel : ViewModelBase
     {
-
-        /// <summary>
-        /// All'Load call API asincrone
-        /// </summary>
         public MainWindowViewModel()
         {
-          
-            new Action(async () =>
-            {
-                IsBusy = true;
-                var Data = await OnVMLoadAsync();
-                IsBusy = false;
-            }).Invoke();
+            // Set current page to first on start up
+            _CurrentPage = Pages[0];
+
+            // Create Observables which will activate to deactivate our commands based on CurrentPage state
+            var canNavNext = this.WhenAnyValue(x => x.CurrentPage.CanNavigateNext);
+            var canNavPrev = this.WhenAnyValue(x => x.CurrentPage.CanNavigatePrevious);
+
+            NavigateNextCommand = ReactiveCommand.Create(NavigateNext, canNavNext);
+            NavigatePreviousCommand = ReactiveCommand.Create(NavigatePrevious, canNavPrev);
+
         }
 
-        public Task Initialization { get; private set; }
-
-
-        #region --------------------- Property
-        private ObservableCollection<double> _listItemTemperatura;
-
-        public ObservableCollection<double> ListItemTemperatura
+        // A read.only array of possible pages
+        private readonly PageViewModelBase[] Pages =
         {
-            get { return _listItemTemperatura; }
-            set { this.RaiseAndSetIfChanged(ref _listItemTemperatura, value); }
-        }
+        new LoginViewModel(),
+        };
+
+  
 
 
-        #endregion
+        // The default is the first page
+        private PageViewModelBase _CurrentPage;
 
-        #region --------------------- ManageVM
-        public async Task<ObservableCollection<MisurazioniResponse>> OnVMLoadAsync()
+        /// <summary>
+        /// Gets the current page. The property is read-only
+        /// </summary>
+        public PageViewModelBase CurrentPage
         {
-            try
-            {
-                return await CallAPISensorAsync();
-            }
-            catch (Exception e)
-            {
-
-                throw new Exception("Errore in fase di caricamento Dati Sensori", e.GetBaseException());
-            }
+            get { return _CurrentPage; }
+            private set { this.RaiseAndSetIfChanged(ref _CurrentPage, value); }
         }
 
-        private async Task<ObservableCollection<MisurazioniResponse>> CallAPISensorAsync()
+        /// <summary>
+        /// Gets a command that navigates to the next page
+        /// </summary>
+        public ICommand NavigateNextCommand { get; }
+
+        private void NavigateNext()
         {
-            try
-            {
-                
+            // get the current index and add 1
+            var index = Pages.IndexOf(CurrentPage) + 1;
 
-                var url = $"{IpService}/Misurazioni/GetMisurazioni";
-
-
-                IRequestHttpService requestHttp = new HttpRequestService();
-                var response = await requestHttp.SendRequestAsync<ObservableCollection<MisurazioniResponse>>(url, HttpMethod.Get, authToken: JwtToken);
-
-                if (response != null)
-                {
-                    await Task.Delay(2000);
-                }
-                else
-                {
-                }
-                return response;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
+            //  /!\ Be aware that we have no check if the index is valid. You may want to add it on your own. /!\
+            CurrentPage = Pages[index];
         }
-        #endregion
 
+        /// <summary>
+        /// Gets a command that navigates to the previous page
+        /// </summary>
+        public ICommand NavigatePreviousCommand { get; }
 
+        private void NavigatePrevious()
+        {
+            // get the current index and subtract 1
+            var index = Pages.IndexOf(CurrentPage) - 1;
 
-
-
-
+            //  /!\ Be aware that we have no check if the index is valid. You may want to add it on your own. /!\
+            CurrentPage = Pages[index];
+        }
     }
 }

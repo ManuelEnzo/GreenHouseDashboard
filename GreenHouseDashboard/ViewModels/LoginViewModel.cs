@@ -16,25 +16,54 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using System.Net.Mail;
+using GreenHouseDashboard.Views;
+using Avalonia.Threading;
 
 namespace GreenHouseDashboard.ViewModels
 {
     /// <summary>
     /// Gestisco interazione per Login
     /// </summary>
-    public class LoginViewModel : ViewModelBase
+    public class LoginViewModel : PageViewModelBase
     {
 
-        public event EventHandler LoginCompleted;
+
+        private bool _isLoggedIn;
+        public bool LoggedIn
+        {
+            get { return _isLoggedIn; }
+            protected set { this.RaiseAndSetIfChanged(ref _isLoggedIn, value); }
+        }
 
         public LoginViewModel()
         {
             LoginCommand = new RelayCommand(async () => await ExecuteLoginAsync(this.Username, this.Password), CanExecuteLogin);
-            this.Username = string.Empty;
-            this.Password = string.Empty;
+            LoggedIn = default;
             ReadAllJsonInformationLogin(ref _username, ref _password);
+            this.WhenAnyValue(x => x.LoggedIn)
+                                .Subscribe(_ => UpdateCanNavigateNext());
+            
+
         }
 
+
+        #region -------------------- ExecuteNavigation
+
+        public override bool CanNavigatePrevious
+        {
+            get => false;
+            protected set => throw new NotSupportedException();
+        }
+
+        private bool _CanNavigateNext;
+
+        public override bool CanNavigateNext
+        {
+            get { return _CanNavigateNext; }
+            protected set { this.RaiseAndSetIfChanged(ref _CanNavigateNext, value); }
+        }
+        #endregion
 
         #region -------------------- Property Login
         private string _username;
@@ -81,7 +110,7 @@ namespace GreenHouseDashboard.ViewModels
 
         #endregion
 
-        #region -------------------- CanExecute Execute Login
+        #region -------------------- CanExecute - Execute Login
 
         public bool CanExecuteLogin()
         {
@@ -112,8 +141,7 @@ namespace GreenHouseDashboard.ViewModels
                     {
                         JwtToken = response.Token;
                     }
-
-                    LoginCompleted?.Invoke(this, EventArgs.Empty);
+                    LoggedIn = true;
                 }
                 else
                 {
@@ -138,12 +166,16 @@ namespace GreenHouseDashboard.ViewModels
 
         #endregion
 
-        /// <summary>
-        /// ----------- 20/12/2023 -----------
-        /// Per gestire la checkbox di accesso rapido ho bisogno di serializzare in fase di exit un file json 
-        /// al momento del login deserializzo il file e setto in automatico username e password
-        /// </summary>
-        /// <returns></returns>
+        #region -------------------- ObjectInfo
+        public class LoginInfo
+        {
+            public string Check { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+        }
+        #endregion
+
+
         private void ReadAllJsonInformationLogin(ref string username, ref string password)
         {
             try
@@ -179,19 +211,10 @@ namespace GreenHouseDashboard.ViewModels
 
         }
 
-        public class LoginInfo
+        private void UpdateCanNavigateNext()
         {
-            public string Check { get; set; }
-            public string Username { get; set; }
-            public string Password { get; set; }
-        }
+            CanNavigateNext = LoggedIn;
 
-        private CancellationTokenSource _cts = new CancellationTokenSource();
-        public CancellationToken cancellationToken => _cts.Token;
-        public void Cancel()
-        {
-            _cts.Cancel();
         }
-
     }
 }

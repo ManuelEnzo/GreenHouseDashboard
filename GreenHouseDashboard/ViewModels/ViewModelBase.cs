@@ -26,6 +26,14 @@ namespace GreenHouseDashboard.ViewModels
         }
         public static string IpService { get; set; } = "http://greenhouseme.ddns.net:5000";
         public static string JwtToken { get; set; }
+
+        private bool _isVisibleNextBack;
+
+        public bool IsVisibleNextBack
+        {
+            get { return _isVisibleNextBack; }
+            set { this.RaiseAndSetIfChanged(ref _isVisibleNextBack, value); }
+        }
         #endregion
 
     }

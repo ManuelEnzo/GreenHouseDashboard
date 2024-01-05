@@ -7,22 +7,24 @@ namespace GreenHouseDashboard
 {
     public class ViewLocator : IDataTemplate
     {
-        public Control? Build(object? data)
+        public Control Build(object? data)
         {
             if (data is null)
-                return null;
+            {
+                return new TextBlock { Text = "data was null" };
+            }
 
-            var name = data.GetType().FullName!.Replace("ViewModel", "View", StringComparison.Ordinal);
+            var name = data.GetType().FullName!.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 
             if (type != null)
             {
-                var control = (Control)Activator.CreateInstance(type)!;
-                control.DataContext = data;
-                return control;
+                return (Control)Activator.CreateInstance(type)!;
             }
-
-            return new TextBlock { Text = "Not Found: " + name };
+            else
+            {
+                return new TextBlock { Text = "Not Found: " + name };
+            }
         }
 
         public bool Match(object? data)
