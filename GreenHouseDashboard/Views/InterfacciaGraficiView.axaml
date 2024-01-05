@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="using:GreenHouseDashboard.ViewModels"
+             x:CompileBindings="True"
+             x:Class="GreenHouseDashboard.Views.InterfacciaGraficiView"
+             x:DataType="vm:InterfacciaGraficiViewModel"
+             FontFamily="{StaticResource SegoeUI}">
+
+  <Panel>
+    <ExperimentalAcrylicBorder IsHitTestVisible="False">
+      <ExperimentalAcrylicBorder.Material>
+        <ExperimentalAcrylicMaterial
+            BackgroundSource="Digger"
+            TintColor="Black"
+            TintOpacity="1"
+            MaterialOpacity="0.65" />
+      </ExperimentalAcrylicBorder.Material>
+    </ExperimentalAcrylicBorder>
+
+    <Panel Margin="40">
+      <Grid ColumnDefinitions="*, 10*">
+
+        <Grid ColumnDefinitions="*" RowDefinitions="*" Grid.Column="0" >
+          <Button Content="Carica Dati" Command="{Binding CaricaDatiCommand}"></Button>
+        </Grid>
+
+        <Grid ColumnDefinitions="*, *, *" RowDefinitions="*, *, *" Grid.Column="1" >
+
+          <Panel Grid.Column="0" Grid.Row="0" Background="AliceBlue" Margin="2">
+
+          </Panel>
+
+          <Panel Grid.Column="1" Grid.Row="0" Background="AliceBlue" Margin="2">
+
+          </Panel>
+
+          <Panel Grid.Column="2" Grid.Row="0" Background="AliceBlue" Margin="2">
+
+          </Panel>
+
+          <DataGrid  Grid.Column="0" Grid.Row="1" ItemsSource="{Binding MisurazioniCollection}"
+            IsReadOnly="True"
+            GridLinesVisibility="All"
+            BorderThickness="1" BorderBrush="Gray">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Valore"  Binding="{Binding Misurazione.Valore}"/>
+              <DataGridTextColumn Header="DataOra " Binding="{Binding Misurazione.DataOra}" />
+            </DataGrid.Columns>
+
+          </DataGrid >
+
+        </Grid>
+      </Grid>
+    </Panel>
+  </Panel>
+</UserControl>

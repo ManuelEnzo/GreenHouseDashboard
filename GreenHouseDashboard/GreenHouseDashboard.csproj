@@ -49,6 +49,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\InterfacciaGraficiView.axaml.cs">
+      <DependentUpon>InterfacciaGraficiView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="login.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

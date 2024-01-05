@@ -47,7 +47,8 @@ namespace GreenHouseDashboard.ViewModels
         // A read.only array of possible pages
         private readonly PageViewModelBase[] Pages =
         {
-        new LoginViewModel(),
+            new LoginViewModel(),
+            new InterfacciaGraficiViewModel()
         };
 
   

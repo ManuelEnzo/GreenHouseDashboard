@@ -1,6 +1,7 @@
 ﻿using Avalonia.Interactivity;
 using ReactiveUI;
 using System;
+using System.Security;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -25,7 +26,7 @@ namespace GreenHouseDashboard.ViewModels
             }
         }
         public static string IpService { get; set; } = "http://greenhouseme.ddns.net:5000";
-        public static string JwtToken { get; set; }
+        public static SecureString JwtToken { get; set; }
 
         private bool _isVisibleNextBack;
 
@@ -35,6 +36,20 @@ namespace GreenHouseDashboard.ViewModels
             set { this.RaiseAndSetIfChanged(ref _isVisibleNextBack, value); }
         }
         #endregion
+
+        public static string UseTokenSecurely(SecureString jwtToken)
+        {
+            // Esempio di utilizzo del token da SecureString
+            IntPtr ptr = System.Runtime.InteropServices.Marshal.SecureStringToBSTR(jwtToken);
+            try
+            {
+                return System.Runtime.InteropServices.Marshal.PtrToStringBSTR(ptr);
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.ZeroFreeBSTR(ptr);
+            }
+        }
 
     }
 }

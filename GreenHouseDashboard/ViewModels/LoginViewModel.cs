@@ -19,6 +19,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Mail;
 using GreenHouseDashboard.Views;
 using Avalonia.Threading;
+using System.Security;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -43,8 +44,6 @@ namespace GreenHouseDashboard.ViewModels
             ReadAllJsonInformationLogin(ref _username, ref _password);
             this.WhenAnyValue(x => x.LoggedIn)
                                 .Subscribe(_ => UpdateCanNavigateNext());
-            
-
         }
 
 
@@ -96,8 +95,6 @@ namespace GreenHouseDashboard.ViewModels
         #region -------------------- Command Login
 
         private RelayCommand _loginCommand;
-        private Window login;
-
         public RelayCommand LoginCommand
         {
             get
@@ -136,12 +133,15 @@ namespace GreenHouseDashboard.ViewModels
                 if (response != null)
                 {
                     Debug.WriteLine($"Utente Loggato con successo : ------ {response} ------- ");
-                    await Task.Delay(2000);
-                    if (!String.IsNullOrEmpty(response.Token))
+                    await Task.Delay(1000);
+                    if (String.IsNullOrEmpty(response.Token))
                     {
-                        JwtToken = response.Token;
+                        throw new ArgumentNullException("JwtToken vuoto !");
                     }
+
+                    JwtToken = StoreTokenSecurely(response.Token);
                     LoggedIn = true;
+
                 }
                 else
                 {
@@ -214,7 +214,27 @@ namespace GreenHouseDashboard.ViewModels
         private void UpdateCanNavigateNext()
         {
             CanNavigateNext = LoggedIn;
-
         }
+
+        private SecureString StoreTokenSecurely(string token)
+        {
+            try
+            {
+                var jwtToken = new SecureString();
+                foreach (char c in token)
+                {
+                    jwtToken.AppendChar(c);
+                }
+                return jwtToken;
+
+            }
+            catch (Exception e)
+            {
+
+                throw e.GetBaseException();
+            }
+        }
+
+       
     }
 }
