@@ -1,5 +1,7 @@
 ﻿using DynamicData;
+using GreenHouseDashboard.DTO.BaseEntity;
 using GreenHouseDashboard.DTO.Misurazioni;
+using GreenHouseDashboard.Interfaces;
 using GreenHouseDashboard.Models;
 using GreenHouseDashboard.ServicesInterfaces.IRequestInterfaces;
 using ReactiveUI;
@@ -16,6 +18,15 @@ namespace GreenHouseDashboard.ViewModels
 {
     public class InterfacciaGraficiViewModel : PageViewModelBase
     {
+        private readonly ILoginService _loginService;
+
+        public InterfacciaGraficiViewModel(ILoginService loginService)
+        {
+            _loginService = loginService;
+            CaricaDatiCommand = new RelayCommand(async () => await OnLoadingDataAsync());
+            MisurazioniCollection = new ObservableCollection<MisurazioniResponse>();
+        }
+
         public override bool CanNavigateNext { get => true; protected set => throw new NotImplementedException(); }
         public override bool CanNavigatePrevious { get => true; protected set => throw new NotImplementedException(); }
 
@@ -27,13 +38,8 @@ namespace GreenHouseDashboard.ViewModels
             set { this.RaiseAndSetIfChanged(ref _misurazioniCollection, value); }
         }
 
-        public InterfacciaGraficiViewModel()
-        {
-            CaricaDatiCommand = new RelayCommand(async () => await OnLoadingDataAsync());
-            MisurazioniCollection = new ObservableCollection<MisurazioniResponse>();
-        }
-
         private RelayCommand _caricaDatiCommand;
+
         public RelayCommand CaricaDatiCommand
         {
             get
@@ -41,6 +47,14 @@ namespace GreenHouseDashboard.ViewModels
                 return _caricaDatiCommand;
             }
             set { _caricaDatiCommand = value; }
+        }
+
+        private LoginInfo _loginInfoUser;
+
+        public LoginInfo LoginInfoUser
+        {
+            get { return _loginInfoUser; }
+            set { this.RaiseAndSetIfChanged(ref _loginInfoUser, value); }
         }
 
 
@@ -51,13 +65,13 @@ namespace GreenHouseDashboard.ViewModels
                 var url = $"{IpService}/Misurazioni/GetMisurazioni";
 
                 IRequestHttpService requestHttp = new HttpRequestService();
-                var response = await requestHttp.SendRequestAsync<ObservableCollection<MisurazioniResponse>>(url, HttpMethod.Get, authToken: UseTokenSecurely(JwtToken));
+                var response = await requestHttp.SendRequestAsync<ObservableCollection<MisurazioniResponse>>(url, HttpMethod.Get, authToken: UseTokenSecurely(_loginService.CurrentLogin.JwtTokeBearer));
 
                 if (response != null)
                 {
                     MisurazioniCollection.AddRange(response);
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -66,6 +80,10 @@ namespace GreenHouseDashboard.ViewModels
             }
         }
 
+        public class LoginInfo
+        {
+            public Utente Utente { get; set; }
+        }
 
     }
 }

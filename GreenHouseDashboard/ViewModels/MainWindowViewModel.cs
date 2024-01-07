@@ -30,68 +30,57 @@ namespace GreenHouseDashboard.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        public MainWindowViewModel()
-        {
-            // Set current page to first on start up
-            _CurrentPage = Pages[0];
+        private readonly ILoginService _loginService;
 
-            // Create Observables which will activate to deactivate our commands based on CurrentPage state
+        public MainWindowViewModel(ILoginService loginService)
+        {
+            _loginService = loginService;
+
+            Pages = new ObservableCollection<Func<PageViewModelBase>>
+            {
+                () => new LoginViewModel(_loginService),
+                () => new InterfacciaGraficiViewModel(_loginService)
+            };
+
+            _CurrentPage = Pages[0]();
+
             var canNavNext = this.WhenAnyValue(x => x.CurrentPage.CanNavigateNext);
             var canNavPrev = this.WhenAnyValue(x => x.CurrentPage.CanNavigatePrevious);
 
             NavigateNextCommand = ReactiveCommand.Create(NavigateNext, canNavNext);
             NavigatePreviousCommand = ReactiveCommand.Create(NavigatePrevious, canNavPrev);
-
         }
 
-        // A read.only array of possible pages
-        private readonly PageViewModelBase[] Pages =
-        {
-            new LoginViewModel(),
-            new InterfacciaGraficiViewModel()
-        };
+        private readonly ObservableCollection<Func<PageViewModelBase>> Pages;
 
-  
-
-
-        // The default is the first page
         private PageViewModelBase _CurrentPage;
 
-        /// <summary>
-        /// Gets the current page. The property is read-only
-        /// </summary>
         public PageViewModelBase CurrentPage
         {
-            get { return _CurrentPage; }
-            private set { this.RaiseAndSetIfChanged(ref _CurrentPage, value); }
+            get => _CurrentPage;
+            private set => this.RaiseAndSetIfChanged(ref _CurrentPage, value);
         }
 
-        /// <summary>
-        /// Gets a command that navigates to the next page
-        /// </summary>
-        public ICommand NavigateNextCommand { get; }
+        public ReactiveCommand<Unit, Unit> NavigateNextCommand { get; }
 
+        /// <summary>
+        /// TODO : Capire perchè la current page passata non viene avanzata di 1. Se trovo il modo l'inizializzazione del secondo vieemodel è corretta
+        /// perchè viene inizializzato solamente nel momento dell'accesso e non come adesso in fase di inizializazzione della PageViewModel
+        /// </summary>
         private void NavigateNext()
         {
-            // get the current index and add 1
-            var index = Pages.IndexOf(CurrentPage) + 1;
-
-            //  /!\ Be aware that we have no check if the index is valid. You may want to add it on your own. /!\
-            CurrentPage = Pages[index];
+            var index = Pages.IndexOf(() => CurrentPage) + 1;
+            if (index < Pages.Count)
+                CurrentPage = Pages[index]();
         }
 
-        /// <summary>
-        /// Gets a command that navigates to the previous page
-        /// </summary>
-        public ICommand NavigatePreviousCommand { get; }
+        public ReactiveCommand<Unit, Unit> NavigatePreviousCommand { get; }
 
         private void NavigatePrevious()
         {
-            // get the current index and subtract 1
-            var index = Pages.IndexOf(CurrentPage) - 1;
-
-            //  /!\ Be aware that we have no check if the index is valid. You may want to add it on your own. /!\
-            CurrentPage = Pages[index];
+            var index = Pages.IndexOf(() => CurrentPage) - 1;
+            if (index >= 0)
+                CurrentPage = Pages[index]();
         }
     }
-}
+    }

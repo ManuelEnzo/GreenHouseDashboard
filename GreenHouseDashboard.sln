@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenHouseDashboard", "Gree
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenHouseDashboard.DTO", "GreenHouseDashboard.DTO\GreenHouseDashboard.DTO.csproj", "{94259808-6B34-4D6B-9790-7F8D81B46E56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenHouseDashboard.ServicesInterfaces", "GreenHouseDashboard.ServicesInterfaces\GreenHouseDashboard.ServicesInterfaces.csproj", "{414B311C-0501-4C8F-8776-886E33FE47A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GreenHouseDashboard.ServicesInterfaces", "GreenHouseDashboard.ServicesInterfaces\GreenHouseDashboard.ServicesInterfaces.csproj", "{414B311C-0501-4C8F-8776-886E33FE47A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

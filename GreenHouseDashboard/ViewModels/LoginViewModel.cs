@@ -20,6 +20,8 @@ using System.Net.Mail;
 using GreenHouseDashboard.Views;
 using Avalonia.Threading;
 using System.Security;
+using GreenHouseDashboard.DTO.BaseEntity;
+using GreenHouseDashboard.Interfaces;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -28,21 +30,14 @@ namespace GreenHouseDashboard.ViewModels
     /// </summary>
     public class LoginViewModel : PageViewModelBase
     {
+        private  ILoginService _loginService;
 
-
-        private bool _isLoggedIn;
-        public bool LoggedIn
+        public LoginViewModel(ILoginService loginService)
         {
-            get { return _isLoggedIn; }
-            protected set { this.RaiseAndSetIfChanged(ref _isLoggedIn, value); }
-        }
-
-        public LoginViewModel()
-        {
+            _loginService = loginService;
             LoginCommand = new RelayCommand(async () => await ExecuteLoginAsync(this.Username, this.Password), CanExecuteLogin);
-            LoggedIn = default;
             ReadAllJsonInformationLogin(ref _username, ref _password);
-            this.WhenAnyValue(x => x.LoggedIn)
+            this.WhenAnyValue(x => x._loginService.CurrentLogin)
                                 .Subscribe(_ => UpdateCanNavigateNext());
         }
 
@@ -95,6 +90,7 @@ namespace GreenHouseDashboard.ViewModels
         #region -------------------- Command Login
 
         private RelayCommand _loginCommand;
+
         public RelayCommand LoginCommand
         {
             get
@@ -134,13 +130,15 @@ namespace GreenHouseDashboard.ViewModels
                 {
                     Debug.WriteLine($"Utente Loggato con successo : ------ {response} ------- ");
                     await Task.Delay(1000);
+
+
                     if (String.IsNullOrEmpty(response.Token))
                     {
                         throw new ArgumentNullException("JwtToken vuoto !");
                     }
 
-                    JwtToken = StoreTokenSecurely(response.Token);
-                    LoggedIn = true;
+                    _loginService.CurrentLogin = CreateLoginProfile(response.Utente, response.Token, true);
+
 
                 }
                 else
@@ -213,28 +211,11 @@ namespace GreenHouseDashboard.ViewModels
 
         private void UpdateCanNavigateNext()
         {
-            CanNavigateNext = LoggedIn;
+            if (_loginService.CurrentLogin != null)
+                CanNavigateNext = _loginService.CurrentLogin.IsLoggedIn;
         }
 
-        private SecureString StoreTokenSecurely(string token)
-        {
-            try
-            {
-                var jwtToken = new SecureString();
-                foreach (char c in token)
-                {
-                    jwtToken.AppendChar(c);
-                }
-                return jwtToken;
 
-            }
-            catch (Exception e)
-            {
 
-                throw e.GetBaseException();
-            }
-        }
-
-       
     }
 }
