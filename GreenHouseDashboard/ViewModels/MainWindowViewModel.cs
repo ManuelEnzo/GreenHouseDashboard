@@ -25,6 +25,7 @@ using System.Reactive.Concurrency;
 using System.Threading;
 using DynamicData;
 using System.Windows.Input;
+using System.Linq;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -63,13 +64,15 @@ namespace GreenHouseDashboard.ViewModels
 
         public ReactiveCommand<Unit, Unit> NavigateNextCommand { get; }
 
-        /// <summary>
-        /// TODO : Capire perchè la current page passata non viene avanzata di 1. Se trovo il modo l'inizializzazione del secondo vieemodel è corretta
-        /// perchè viene inizializzato solamente nel momento dell'accesso e non come adesso in fase di inizializazzione della PageViewModel
-        /// </summary>
         private void NavigateNext()
         {
-            var index = Pages.IndexOf(() => CurrentPage) + 1;
+            int index = Pages
+                .Select((page, pageIndex) => new { Page = page, Index = pageIndex })
+                .FirstOrDefault(x => x.Page().GetType() == CurrentPage.GetType())
+                ?.Index ?? -1;
+
+            if (index < 0) { return ; }
+            index++;
             if (index < Pages.Count)
                 CurrentPage = Pages[index]();
         }
@@ -78,7 +81,12 @@ namespace GreenHouseDashboard.ViewModels
 
         private void NavigatePrevious()
         {
-            var index = Pages.IndexOf(() => CurrentPage) - 1;
+            int index = Pages
+                .Select((page, pageIndex) => new { Page = page, Index = pageIndex })
+                .FirstOrDefault(x => x.Page().GetType() == CurrentPage.GetType())
+                ?.Index ?? -1;
+            if (index < 0) { return; }
+            index--;
             if (index >= 0)
                 CurrentPage = Pages[index]();
         }

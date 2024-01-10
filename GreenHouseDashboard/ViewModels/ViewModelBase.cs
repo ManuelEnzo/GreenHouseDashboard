@@ -4,7 +4,19 @@ using GreenHouseDashboard.DTO.Login;
 using ReactiveUI;
 using System;
 using System.Diagnostics;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Drawing;
+using LiveChartsCore.SkiaSharpView.Extensions;
+using LiveChartsCore.SkiaSharpView.VisualElements;
+using LiveChartsCore.VisualElements;
 using System.Security;
+using System.Collections;
+using System.Collections.Generic;
+using DynamicData;
+using System.ComponentModel;
+using Tmds.DBus.Protocol;
 
 namespace GreenHouseDashboard.ViewModels
 {
@@ -102,6 +114,50 @@ namespace GreenHouseDashboard.ViewModels
             }
         }
 
+        #region ----------------------- SkiaSharp
+
+        public NeedleVisual OnNewNeedleVisual(int value)
+        {
+            return new NeedleVisual { Value = value };
+        }
+
+        public void OnInitializeISeries(ref IEnumerable<ISeries> Series, List<double> values, int sectionsOuter, int sectionsWidth)
+        {
+            try
+            {
+                if (Series == null) { return; }
+                if (values == null) { return; }
+                if (values.Count == 0) { return; }
+
+                GaugeItem[] i = new GaugeItem[values.Count];
+
+                //TODO : Capire come ciclare  i[0]
+                values.ForEach((x) => i[0] = new GaugeItem(60, s => SetStyle(sectionsOuter, sectionsWidth, s)));
+
+                
+                Series = GaugeGenerator.BuildAngularGaugeSections(i);
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private static void SetStyle(
+           double sectionsOuter, double sectionsWidth, PieSeries<ObservableValue> series)
+        {
+            series.OuterRadiusOffset = sectionsOuter;
+            series.MaxRadialColumnWidth = sectionsWidth;
+        }
+
+        #endregion
+
+
+
+
+
         /// <summary>
         /// Utente Loggato
         /// </summary>
@@ -110,7 +166,7 @@ namespace GreenHouseDashboard.ViewModels
             public Utente User { get; set; }
             public SecureString JwtTokeBearer { get; set; }
             public bool IsLoggedIn { get; set; }
-            
+
         }
 
 

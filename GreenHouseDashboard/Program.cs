@@ -19,6 +19,7 @@ namespace GreenHouseDashboard
                 .UsePlatformDetect()
                 .WithInterFont()
                 .LogToTrace()
+                .UseSkia()
                 .UseReactiveUI();
     }
 }

@@ -6,6 +6,8 @@ using GreenHouseDashboard.DI;
 using GreenHouseDashboard.Interfaces;
 using GreenHouseDashboard.ViewModels;
 using GreenHouseDashboard.Views;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
@@ -24,6 +26,8 @@ namespace GreenHouseDashboard
             ServiceContainer.RegisterService<ILoginService>(stateService);
 
             AvaloniaXamlLoader.Load(this);
+            LiveCharts.Configure(config =>
+            config.AddDarkTheme());
         }
 
         public override void OnFrameworkInitializationCompleted()

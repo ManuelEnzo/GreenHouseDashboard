@@ -138,7 +138,10 @@ namespace GreenHouseDashboard.ViewModels
                     }
 
                     _loginService.CurrentLogin = CreateLoginProfile(response.Utente, response.Token, true);
-
+                    if(_loginService.CurrentLogin == null)
+                    {
+                        throw new ArgumentNullException("LoginService non inizializzato vuoto !");
+                    }
 
                 }
                 else
