@@ -22,8 +22,10 @@ namespace GreenHouseDashboard
             var services = new ServiceCollection();
             services.AddSingleton<ILoginService, LoginService>();
 
-            var stateService = new LoginService();  // Crea un'istanza del tuo servizio
-            ServiceContainer.RegisterService<ILoginService>(stateService);
+            var loginService = new LoginService();  // Crea un'istanza del tuo servizio
+            var misurService = new MisurazioniService();
+            ServiceContainer.RegisterService<ILoginService>(loginService);
+            ServiceContainer.RegisterService<IMisurazioniService>(misurService);
 
             AvaloniaXamlLoader.Load(this);
             LiveCharts.Configure(config =>
@@ -33,12 +35,13 @@ namespace GreenHouseDashboard
         public override void OnFrameworkInitializationCompleted()
         {
             ILoginService loginService = new LoginService();
+            IMisurazioniService misurazioniService = new MisurazioniService();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = new MainWindowViewModel(loginService),
+                    DataContext = new MainWindowViewModel(loginService, misurazioniService),
                 };
             }
 

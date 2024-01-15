@@ -32,15 +32,16 @@ namespace GreenHouseDashboard.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly ILoginService _loginService;
+        private readonly IMisurazioniService _misurazioniService;
 
-        public MainWindowViewModel(ILoginService loginService)
+        public MainWindowViewModel(ILoginService loginService, IMisurazioniService misurazioniService)
         {
             _loginService = loginService;
-
+            this._misurazioniService = misurazioniService;
             Pages = new ObservableCollection<Func<PageViewModelBase>>
             {
                 () => new LoginViewModel(_loginService),
-                () => new InterfacciaGraficiViewModel(_loginService)
+                () => new InterfacciaGraficiViewModel(_loginService, _misurazioniService)
             };
 
             _CurrentPage = Pages[0]();

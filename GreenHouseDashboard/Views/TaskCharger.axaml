@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="GreenHouseDashboard.Views.TaskCharger"
+        xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
         TransparencyLevelHint="AcrylicBlur"
         Title="TaskCharger"
         ExtendClientAreaToDecorationsHint="True">
@@ -19,6 +20,15 @@
     </ExperimentalAcrylicBorder>
 
     <Panel Margin="40">
+      <progRing:ProgressRing
+             Grid.Row="1"
+             Grid.Column="0"
+             Width="80"
+             Height="80"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Top"
+             Foreground="Green"
+             Margin="10,20,0,0"/>
 
     </Panel>
   </Panel>

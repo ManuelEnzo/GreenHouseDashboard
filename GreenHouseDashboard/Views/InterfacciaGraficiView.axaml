@@ -5,6 +5,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="using:GreenHouseDashboard.ViewModels"
              xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:progRing="clr-namespace:AvaloniaProgressRing;assembly=AvaloniaProgressRing"
              xmlns:local="using:GreenHouseDashboard.ViewModels.InterfacciaGraficiViewModel"
              x:CompileBindings="True"
              x:Class="GreenHouseDashboard.Views.InterfacciaGraficiView"
@@ -50,8 +51,7 @@
             <!-- Pannello Interazioni -->
             <Panel Grid.Row="1">
               <Grid RowDefinitions="*,*">
-                <Button Content="Carica Dati" Command="{Binding CaricaDatiCommand}"
-                        Grid.Row="0"></Button>
+
               </Grid>
             </Panel>
           </Grid>
@@ -61,15 +61,33 @@
       <!-- Grafici -->
       <Panel Grid.Column="1" Margin="10" >
         <Grid ColumnDefinitions="*, *, *" RowDefinitions="*, *, *" >
-          <lvc:PieChart
-                 Grid.Row="1"
-                 Series="{Binding Series}"
-                 VisualElements="{Binding VisualElements}"
-                 InitialRotation="-225"
-                 MaxAngle="270"
-                 MinValue="0"
-                 MaxValue="100">
-          </lvc:PieChart>
+          
+          <!-- Temperatura DHT22 -->
+          <DockPanel LastChildFill="True" Grid.Column="0" Grid.Row="0">
+            <TextBlock Text="DHT22 Temp°" FontFamily="{StaticResource SegoeUI}" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center"></TextBlock>
+            <lvc:PieChart
+               Series="{Binding SeriesTemp}"
+               VisualElements="{Binding VisualElementsTemp}"
+               InitialRotation="-225"
+               MaxAngle="270"
+               MinValue="0"
+               MaxValue="100">
+            </lvc:PieChart>
+          </DockPanel>
+          
+          <!-- Umidità DHT22 -->
+          <DockPanel Grid.Column="1" Grid.Row="0" LastChildFill="True">
+            <TextBlock Text="DHT22 Hum%" FontFamily="{StaticResource SegoeUI}" FontSize="16" FontWeight="Medium" HorizontalAlignment="Center"></TextBlock>
+            <lvc:PieChart
+                   Series="{Binding SeriesHum}"
+                   VisualElements="{Binding VisualElementsHum}"
+                   InitialRotation="-225"
+                   MaxAngle="270"
+                   MinValue="0"
+                   MaxValue="100">
+            </lvc:PieChart>
+          
+          </DockPanel>
         </Grid>
       </Panel>
     </Grid>
