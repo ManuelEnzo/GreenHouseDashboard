@@ -44,11 +44,11 @@ namespace GreenHouseDashboard.ViewModels
 
             Needle = OnNewNeedleVisual(45);
 
-            Series = GaugeGenerator.BuildAngularGaugeSections(
-                new GaugeItem(60, s => SetStyle(sectionsOuter, sectionsWidth, s)),
-                new GaugeItem(30, s => SetStyle(sectionsOuter, sectionsWidth, s)),
-                new GaugeItem(10, s => SetStyle(sectionsOuter, sectionsWidth, s)));
+            IEnumerable<ISeries> s = new ObservableCollection<ISeries>();
+            OnInitializeISeries(ref s, new List<double> { 60, 30, 10 }, sectionsOuter, sectionsWidth);
 
+            Series = s;
+         
             VisualElements = new VisualElement<SkiaSharpDrawingContext>[]
             {
             new AngularTicksVisual

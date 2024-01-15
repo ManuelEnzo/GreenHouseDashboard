@@ -132,7 +132,13 @@ namespace GreenHouseDashboard.ViewModels
                 GaugeItem[] i = new GaugeItem[values.Count];
 
                 //TODO : Capire come ciclare  i[0]
-                values.ForEach((x) => i[0] = new GaugeItem(60, s => SetStyle(sectionsOuter, sectionsWidth, s)));
+                int index = 0;
+                foreach(var item in values)
+                {
+                    i[index] = new GaugeItem(60, s => SetStyle(sectionsOuter, sectionsWidth, s));
+                    index += 1;
+                }
+                //values.ForEach((x) => i[0] = new GaugeItem(60, s => SetStyle(sectionsOuter, sectionsWidth, s)));
 
                 
                 Series = GaugeGenerator.BuildAngularGaugeSections(i);
